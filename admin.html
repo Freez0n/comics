@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin - Блочный редактор</title>
+    <style>
+        body { font-family: sans-serif; background: #e3e3e3; padding: 20px; }
+        .container { max-width: 800px; margin: auto; background: white; padding: 20px; border: 4px solid #000; box-shadow: 10px 10px 0 #000; }
+        .block { background: #f0f0f0; border: 2px dashed #000; padding: 15px; margin: 10px 0; position: relative; }
+        input, textarea, select { width: 100%; padding: 10px; margin: 5px 0; box-sizing: border-box; border: 2px solid #000; }
+        .btn { padding: 12px; cursor: pointer; border: 2px solid #000; font-weight: bold; transition: 0.2s; }
+        .btn:hover { background: #eee; }
+        .btn-add { background: #ffd700; margin-bottom: 20px; }
+        .btn-save { background: #000; color: #fff; width: 100%; font-size: 1.1rem; }
+        .logout-btn { background: #ff4444; color: white; float: right; }
+        .remove-btn { position: absolute; right: 5px; top: 5px; background: red; color: white; border: none; cursor: pointer; width: 25px; height: 25px; }
+        #adminPanel { display: none; }
+        .event-item { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid #ddd; align-items: center; }
+    </style>
+</head>
+<body>
+
+<div id="loginForm" class="container">
+    <h2>Вход в панель управления</h2>
+    <input type="text" id="user" placeholder="Логин (admin)">
+    <input type="password" id="pass" placeholder="Пароль (admin123)">
+    <button class="btn btn-save" onclick="login()">Войти</button>
+</div>
+
+<div id="adminPanel" class="container">
+    <button class="btn logout-btn" onclick="logout()">Выйти</button>
+    <h1>Конструктор событий</h1>
+    
+    <input type="hidden" id="editId">
+    <input type="text" id="title" placeholder="Заголовок события">
+    <select id="universe">
+        <option value="marvel">Marvel</option>
+        <option value="dc">DC</option>
+        <option value="both">Both</option>
+    </select>
+    <input type="text" id="date" placeholder="Дата события (напр. Май 2006)">
+    <input type="text" id="mainImg" placeholder="URL главной картинки карточки">
+    <textarea id="cardDesc" placeholder="Краткое описание для главной страницы" rows="3"></textarea>
+
+    <h3>Контент страницы (блоки):</h3>
+    <div id="blocks"></div>
+    <button class="btn btn-add" onclick="addBlock('text')">+ Добавить текст</button>
+    <button class="btn btn-add" onclick="addBlock('image')">+ Добавить картинку</button>
+    
+    <button class="btn btn-save" onclick="save()">СОХРАНИТЬ ВСЁ В БАЗУ</button>
+    
+    <hr style="margin: 30px 0;">
+    <h3>Список текущих событий:</h3>
+    <div id="list"></div>
+</div>
+
+<script>
+    let blocksArr = [];
+
+    window.onload = () => {
+        if (localStorage.getItem('isLoggedIn') === 'true') {
+            showPanel();
+        }
+    };
+
+    async function login() {
+        const res = await fetch('/api/login', { 
+            method: 'POST', 
+            headers: {'Content-Type': 'application/json'}, 
+            body: JSON.stringify({username: user.value, password: pass.value}) 
+        });
+        
+        if (res.ok) {
+            localStorage.setItem('isLoggedIn', 'true');
+            showPanel();
+        } else {
+            alert('Неверные данные для входа!');
+        }
+    }
+
+    function logout() {
+        localStorage.removeItem('isLoggedIn'); 
+        location.reload(); 
+    }
+
+    function showPanel() {
+        document.getElementById('loginForm').style.display = 'none';
+        document.getElementById('adminPanel').style.display = 'block';
+        loadList();
+    }
+
+    function addBlock(type, content = '') {
+        const id = Date.now() + Math.random();
+        blocksArr.push({id, type, content});
+        renderBlocks();
+    }
+
+    function renderBlocks() {
+        const blocksDiv = document.getElementById('blocks');
+        blocksDiv.innerHTML = blocksArr.map(b => `
+            <div class="block">
+                <button class="remove-btn" onclick="removeBlock(${b.id})">×</button>
+                <strong>${b.type === 'text' ? '📝 ТЕКСТОВЫЙ АБЗАЦ' : '🖼️ КАРТИНКА (URL)'}</strong>
+                ${b.type === 'text' 
+                    ? `<textarea oninput="updateBlock(${b.id}, this.value)" rows="4">${b.content}</textarea>` 
+                    : `<input type="text" oninput="updateBlock(${b.id}, this.value)" value="${b.content}">`}
+            </div>
+        `).join('');
+    }
+
+    function updateBlock(id, val) {
+        const b = blocksArr.find(x => x.id === id);
+        if (b) b.content = val;
+    }
+
+    function removeBlock(id) {
+        blocksArr = blocksArr.filter(x => x.id !== id);
+        renderBlocks();
+    }
+    
+    async function save() {
+        const data = { 
+            id: editId.value || null, 
+            title: title.value, 
+            universe: universe.value, 
+            event_date: date.value, 
+            card_desc: cardDesc.value, 
+            main_image: mainImg.value, 
+            blocks: blocksArr 
+        };
+        
+        const res = await fetch('/api/events', { 
+            method: 'POST', 
+            headers: {'Content-Type': 'application/json'}, 
+            body: JSON.stringify(data) 
+        });
+        
+        if (res.ok) {
+            alert('Данные успешно синхронизированы с БД!');
+            location.reload();
+        }
+    }
+
+    async function loadList() {
+        const res = await fetch('/api/events');
+        const data = await res.json();
+        const listDiv = document.getElementById('list');
+        listDiv.innerHTML = data.map(e => `
+            <div class="event-item">
+                <span><strong>${e.title}</strong> (${e.universe})</span>
+                <div>
+                    <button class="btn" onclick="edit(${e.id})">Редактировать</button>
+                    <button class="btn" style="color:red" onclick="deleteEvent(${e.id})">Удалить</button>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    async function edit(id) {
+        const res = await fetch('/api/events/' + id);
+        const e = await res.json();
+        
+        editId.value = e.id;
+        title.value = e.title;
+        universe.value = e.universe;
+        date.value = e.event_date;
+        mainImg.value = e.main_image;
+        cardDesc.value = e.card_desc;
+        
+        blocksArr = e.blocks.map(b => ({id: b.id, type: b.block_type, content: b.content}));
+        renderBlocks();
+        window.scrollTo(0, 0); 
+    }
+
+    async function deleteEvent(id) {
+        if (confirm('Вы уверены? Это удалит событие и все его блоки навсегда.')) {
+            await fetch('/api/events/' + id, { method: 'DELETE' });
+            loadList();
+        }
+    }
+</script>
+</body>
+</html>

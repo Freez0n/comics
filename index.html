@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Comics</title>
+  <link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Inter:wght@400;500&display=swap&subset=cyrillic,latin" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header>
+    <h1>Comics Master</h1>
+    <p>Навигатор событий: Marvel & DC</p>
+  </header>
+
+  <div class="controls">
+    <input type="text" id="search" placeholder="Поиск события..." />
+    <div class="filter-group">
+      <button class="filter-btn active" data-filter="all">Все</button>
+      <button class="filter-btn" data-filter="marvel">Marvel</button>
+      <button class="filter-btn" data-filter="dc">DC</button>
+      <button class="filter-btn" data-filter="both">Marvel + DC</button>
+    </div>
+    <button id="reset">Сбросить</button>
+  </div>
+
+  <main id="eventGrid" class="event-grid"></main>
+
+  <script src="events.js"></script>
+  <script src="script.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+  <script>
+    AOS.init({ duration: 800, once: true });
+    window.onload = () => document.documentElement.classList.add('loaded');
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,307 @@
+
+:root {
+    --marvel-red: #ED1D24;
+    --dc-blue: #0476F2;
+    --both-marvel: #ED1D24;
+    --both-dc: #0476F2;
+    --both-gradient: linear-gradient(90deg, #ED1D24 50%, #0476F2 50%);
+    --comic-yellow: #FFD700;
+    --border-thick: 4px solid #000;
+    --shadow-light: rgba(0, 0, 0, 0.18);
+    
+    --font-head: 'Russo One', sans-serif;
+    --font-base: 'Inter', sans-serif;
+  }
+  
+  html {
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+  }
+  
+  html.loaded {
+    opacity: 1;
+  }
+  
+  body {
+    margin: 0;
+    font-family: var(--font-base);
+    background: #e3e3e3;
+    color: #111;
+    background-image: radial-gradient(rgba(0,0,0,0.08) 1px, transparent 1px);
+    background-size: 8px 8px;
+  }
+  
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+  
+  header {
+    background: var(--comic-yellow);
+    border-bottom: var(--border-thick);
+    padding: 25px;
+    text-align: center;
+    box-shadow: 0px 8px 0px #000;
+    margin-bottom: 20px;
+  }
+  
+  header h1 {
+    margin: 0;
+    font-family: var(--font-head);
+    font-size: clamp(2rem, 5vw, 4rem);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #000;
+  }
+
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+    align-items: center;
+    padding: 0 20px 25px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  input[type="text"] {
+    flex: 1;
+    min-width: 250px;
+    padding: 12px;
+    border: var(--border-thick);
+    font-size: 1rem;
+    box-shadow: 0px 4px 0px #000;
+    font-family: var(--font-base);
+  }
+  
+  .filter-group {
+    display: flex;
+    gap: 10px;
+  }
+  
+  button,
+  .filter-btn {
+    background: #fff;
+    border: var(--border-thick);
+    box-shadow: 4px 4px 0px #000;
+    text-transform: uppercase;
+    padding: 8px 14px;
+    cursor: pointer;
+    font-family: var(--font-head);
+    font-size: 0.9rem;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+  
+  button:hover,
+  .filter-btn:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 6px 6px 8px var(--shadow-light);
+  }
+  
+  button:active,
+  .filter-btn:active {
+    transform: translateY(2px);
+    box-shadow: 2px 2px 4px var(--shadow-light);
+  }
+  
+  .filter-btn.active {
+    background: #000;
+    color: var(--comic-yellow);
+  }
+
+  #count {
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 15px;
+    font-family: var(--font-base);
+  }
+  
+  .event-grid {
+    display: grid;
+    gap: 30px;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    max-width: 1200px;
+    margin: 0 auto 40px;
+    padding: 0 20px;
+  }
+  
+  .card {
+    background: #fff;
+    border: var(--border-thick);
+    box-shadow: 8px 8px 0px #000;
+    cursor: pointer;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .card:hover {
+    transform: translateY(-6px) scale(1.02);
+    box-shadow: 12px 12px 12px var(--shadow-light);
+  }
+  
+  .card-img {
+    height: 240px;
+    background-size: cover;
+    background-position: center;
+    border-bottom: var(--border-thick);
+    transition: transform 0.3s ease;
+  }
+  
+  .card:hover .card-img {
+    transform: scale(1.04);
+  }
+  
+  .card-content {
+    padding: 16px;
+  }
+  
+  .badge {
+    display: inline-block;
+    padding: 5px 10px;
+    font-family: var(--font-head);
+    font-size: 1rem;
+    margin-bottom: 8px;
+    color: #fff;
+    font-weight: bold;
+    border: 2px solid #000;
+  }
+  
+  .badge-marvel {
+    background: var(--marvel-red);
+  }
+  
+  .badge-dc {
+    background: var(--dc-blue);
+  }
+  
+  .badge-both {
+    background: var(--both-gradient);
+  }
+  
+  .card-title {
+    margin: 0 0 6px;
+    font-size: 1.4rem;
+    font-family: var(--font-head);
+  }
+  
+  .card-date {
+    font-size: 0.9rem;
+    color: #555;
+    margin-bottom: 7px;
+    font-family: var(--font-base);
+  }
+  
+  .card-desc {
+    font-size: 0.97rem;
+    line-height: 1.45;
+    font-family: var(--font-base);
+  }
+  
+  #detail {
+    max-width: 920px;
+    margin: 60px auto 40px;
+    padding: 0 22px;
+    position: relative;
+  }
+  
+  #detail button {
+    position: fixed;
+    top: 18px;
+    left: 18px;
+    background: #000;
+    color: var(--comic-yellow);
+    border: var(--border-thick);
+    padding: 10px 14px;
+    font-family: var(--font-head);
+    font-size: 1rem;
+    box-shadow: 4px 4px 0px #000;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+  
+  #detail button:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 6px 6px 8px var(--shadow-light);
+  }
+  
+  .hero-banner {
+    width: 100%;
+    height: 350px;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 30px;
+    box-shadow: 0 8px 0 #000;
+  }
+  
+  .hero-info {
+    background: rgba(0,0,0,0.65);
+    padding: 24px 32px;
+    text-align: center;
+  }
+  
+  .hero-info h1 {
+    margin: 0;
+    font-family: var(--font-head);
+    font-size: 3rem;
+    color: #FFD700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  
+  .hero-date {
+    font-family: 'Russo One', sans-serif;
+    font-size: 1.2rem;
+    color: #000;
+    text-shadow: 
+        -1px -1px 0 #fff,  
+         1px -1px 0 #fff,
+        -1px  1px 0 #fff,
+         1px  1px 0 #fff;
+    
+    font-weight: bold;
+    text-transform: uppercase;
+}
+  
+  .story {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 18px;
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: #222;
+    font-family: var(--font-base);
+  }
+  
+  .story p {
+    margin-bottom: 20px;
+    text-indent: 1.3em;
+  }
+
+  .story-img {
+    margin: 18px 0;
+    text-align: center;
+  }
+  
+  .story-img img {
+    width: 90%;
+    border: 4px solid #000;
+    box-shadow: 6px 6px 12px rgba(0,0,0,0.22);
+    transition: transform 0.3s ease;
+  }
+  
+  .story-img img:hover {
+    transform: scale(1.05);
+  }
+
+  .final-line {
+    margin-top: 32px;
+    font-weight: 700;
+    font-size: 1.12rem;
+    text-align: center;
+    border-top: 2px solid #000;
+    padding-top: 16px;
+  }
