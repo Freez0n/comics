@@ -41,7 +41,6 @@ const db = mysql.createPool({
 
 ---
 
-<img width="335" height="731" alt="image" src="https://github.com/user-attachments/assets/6b66bf84-bbce-445f-8e0d-47ca9598a2da" />
 <img width="1151" height="2560" alt="image" src="https://github.com/user-attachments/assets/04a73e7f-3c43-4faa-a226-12c62de79a9f" />
 <img width="1896" height="863" alt="image" src="https://github.com/user-attachments/assets/3c0bd516-5c9b-4815-9efa-33f2b7fdd221" />
 <img width="1894" height="806" alt="image" src="https://github.com/user-attachments/assets/f730bf89-8e11-4c28-aec2-95c83f24d930" />
