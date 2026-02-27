@@ -11,9 +11,12 @@
 </head>
 <body>
 
-  <header>
-    <h1>Comics Master</h1>
-    <p>Навигатор событий: Marvel & DC</p>
+  <header class="main-header">
+    <div class="header-content">
+      <h1 class="logo-text" data-text="Comics Master">Comics Master</h1>
+      <div></div>
+      <p class="header-subtitle">Исследуй мультивселенные <span>Marvel</span> & <span>DC</span></p>
+    </div>
   </header>
 
   <div class="controls">
@@ -24,7 +27,6 @@
       <button class="filter-btn" data-filter="dc">DC</button>
       <button class="filter-btn" data-filter="both">Marvel + DC</button>
     </div>
-    <button id="reset">Сбросить</button>
   </div>
 
   <main id="eventGrid" class="event-grid"></main>
